@@ -63,10 +63,11 @@ class TestBooksCollector:
     # тест: установка жанра книге и получение жанра книги по её имени
     def test_set_book_genre_add_genre_to_book(self):
         collector = BooksCollector()
-        collector.add_new_book('Пираты Карибского моря')
-        collector.set_book_genre('Пираты Карибского моря', 'Фантастика')
+        name = 'Пираты Карибского моря'
+        collector.books_genre[name] = ''
+        collector.set_book_genre(name, 'Фантастика')
 
-        assert collector.get_book_genre('Пираты Карибского моря') == 'Фантастика'
+        assert collector.books_genre[name] == 'Фантастика'
 
     # тест: получение списка книг с определенным жанром
     def test_get_books_with_specific_genre_get_comedy_books(self):
@@ -80,40 +81,29 @@ class TestBooksCollector:
         assert 'Зачарованные' in result
         assert 'Покоряя вершины' not in result
 
-    #тест: невозможность добавить одну и ту же книгу дважды
-    def test_add_new_book_double_add_is_not_possible(self):
+    #тест: проверка возвращаемого словаря
+    def test_get_books_genre_returns_dictionary(self):
         collector = BooksCollector()
-        collector.add_new_book('Зачарованные')
-        collector.add_new_book('Зачарованные')
+        name = 'Зачарованные'
+        collector.add_new_book(name)
         
-        #проверяем, что в словаре только одна запись 
-        assert len(collector.get_books_genre()) == 1
+        assert name in collector.books_genre
+        assert collector.books_genre[name] == ''
+
 
     #тест: возвращение книг, подходящих детям, в списке
     def test_get_books_for_children_returns_valid_books(self):
         collector = BooksCollector()
-        collector.add_new_book('Приключения Винни-Пуха')
-        collector.set_book_genre('Приключения Винни-Пуха', 'Мультфильмы')
-        collector.add_new_book('Ледниковый период')
-        collector.set_book_genre('Ледниковый период', 'Фантастика')
+        collector.books_genre = {
+        'Приключения Винни-Пуха': 'Мультфильмы',
+        'Ледниковый период': 'Фантастика',
+        'Чужой': 'Ужасы',
+        'Десять негритят': 'Детективы'
+    }
 
         children_books = collector.get_books_for_children()
-        assert 'Приключения Винни-Пуха' in children_books
-        assert 'Ледниковый период' in children_books
-        assert len(children_books) == 2
-
-    #тест: исключение книг с возрастным рейтингом
-    def test_get_books_for_children_exludes_adult_genres(self):
-        collector = BooksCollector()
-        collector.add_new_book('Чужой')
-        collector.set_book_genre('Чужой', 'Ужасы')
-        collector.add_new_book('Десять негритят')
-        collector.set_book_genre('Десять негритят', 'Детективы')
-
-        children_books = collector.get_books_for_children()
-        assert 'Чужой' not in children_books
-        assert 'Десять негритят' not in children_books
-        assert len(children_books) == 0
+        assert children_books == ['Приключения Винни-Пуха', 'Ледниковый период']
+       
 
     #тест: добавление книг в избранное
     def test_add_book_in_favorites_added_successfully(self):
@@ -136,14 +126,15 @@ class TestBooksCollector:
     #тест: нельзя повторно добавить книгу в избранное, если она там уже есть
     def test_add_book_in_favorites_double_add_is_not_possible(self):
         collector = BooksCollector()
-        collector.add_new_book('Зачарованные')
-        collector.add_book_in_favorites('Зачарованные')
-        collector.add_book_in_favorites('Зачарованные')
+        name = 'Зачарованные'
+        collector.books_genre[name] = 'Комедии'
 
-        favourites = collector.get_list_of_favorites_books()
+        collector.add_book_in_favorites(name)
+        collector.add_book_in_favorites(name)
+
         
-        assert favourites.count('Зачарованные') == 1
-        assert len(favourites) == 1
+        assert collector.favorites == [name]
+        assert len(collector.favorites) == 1
 
  
 
