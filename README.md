@@ -18,7 +18,7 @@
 
 ### 2. Работа с жанрами
 *   **test_set_book_genre_add_genre_to_book**: проверка успешной установки жанра из списка допустимых.
-*   **test_get_book_genre_returns_correct_value**: изолированный тест метода получения жанра конкретной книги.
+*   **test_get_book_genre_returns_correct_genre**: изолированный тест метода получения жанра конкретной книги.
 *   **test_get_books_genre_returns_dictionary**: позитивный тест на возврат полного словаря коллекции.
 *   **test_get_books_with_specific_genre_get_comedy_books**: проверка фильтрации книг по жанру.
 
@@ -34,5 +34,5 @@
 ## Запуск тестов
 
 Для запуска всех тестов с подробным выводом:
-```bash
+
 pytest -v tests.py

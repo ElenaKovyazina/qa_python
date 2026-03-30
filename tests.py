@@ -60,7 +60,7 @@ class TestBooksCollector:
 
 
 
-    # тест: установка жанра книге и получение жанра книги по её имени
+    # тест: установка жанра книге
     def test_set_book_genre_add_genre_to_book(self):
         collector = BooksCollector()
         name = 'Пираты Карибского моря'
@@ -69,6 +69,17 @@ class TestBooksCollector:
 
         assert collector.books_genre[name] == 'Фантастика'
 
+    #тест: получение жанра книги
+    def test_get_book_genre_returns_correct_genre(self):
+        collector = BooksCollector()
+        name = 'Дракула'
+        genre = 'Ужасы'
+        
+        collector.add_new_book(name)
+        collector.set_book_genre(name, genre)
+        
+        assert collector.get_book_genre(name) == genre
+        
     # тест: получение списка книг с определенным жанром
     def test_get_books_with_specific_genre_get_comedy_books(self):
         collector = BooksCollector()
@@ -87,8 +98,9 @@ class TestBooksCollector:
         name = 'Зачарованные'
         collector.add_new_book(name)
         
-        assert name in collector.books_genre
-        assert collector.books_genre[name] == ''
+        result = collector.get_books_genre()
+        assert name in result
+        assert result[name] == ''
 
 
     #тест: возвращение книг, подходящих детям, в списке
@@ -106,17 +118,29 @@ class TestBooksCollector:
        
 
     #тест: добавление книг в избранное
-    def test_add_book_in_favorites_added_successfully(self):
+    def test_add_books_in_favorites_added_successfully(self):
+        collector = BooksCollector()
+        name = 'Ледниковый период'
+        collector.add_new_book(name)
+        collector.add_book_in_favorites(name)
+
+        assert name in collector.favorites
+        assert len(collector.favorites) == 1
+
+    #тест: получение списка избранного
+    def test_get_list_of_favorites_books_returns_correct_list(self):
         collector = BooksCollector()
         collector.add_new_book('Зачарованные')
         collector.add_book_in_favorites('Зачарованные')
 
-        assert 'Зачарованные' in collector.get_list_of_favorites_books()
+        result = collector.get_list_of_favorites_books()
+
+        assert 'Зачарованные' in result
 
     #тест: удаление книг из избранного
     def test_delete_books_from_favorites_deleted_successfully(self):
         collector = BooksCollector()
-        collector.add_new_book('Зачарованные')
+        collector.add_new_book('Зачарованные') 
         collector.add_book_in_favorites('Зачарованные')
 
         collector.delete_book_from_favorites('Зачарованные')
